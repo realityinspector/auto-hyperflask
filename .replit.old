@@ -1,0 +1,11 @@
+run = "cp config_dev.yml config.yml && npm run build && python3 -m hyperflask dev"
+
+[env]
+PATH = "/home/runner/.local/bin:/home/runner/node_modules/.bin:/nix/store/yjclizcfb567w14v72ks27azd3qrsv5p-pid1/bin:/nix/store/d6aggwyz4bp11k262qfhxsp8a4n3x0ym-replit-runtime-path/bin:/home/runner/.nix-profile/bin:/home/runner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+[nix]
+channel = "stable-23_11"
+
+[deployment]
+run = ["sh", "-c", "cp config_prod.yml config.yml && npm run build && python3 -m hyperflask deploy"]
+deploymentTarget = "cloudrun"

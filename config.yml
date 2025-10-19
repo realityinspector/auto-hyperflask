@@ -1,5 +1,4 @@
-# Default configuration (symlink to config_dev.yml or config_prod.yml)
-# Or use HYPERFLASK_CONFIG environment variable to specify config file
+# Development configuration (SQLite)
 sqlorm_uri: sqlite://database/app.db
 sqlorm_migrations_folder: "../database/migrations"
 dramatiq_broker: sqlite://database/tasks.db
