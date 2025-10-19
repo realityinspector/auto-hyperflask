@@ -1,0 +1,140 @@
+---
+"""
+Product catalog / shop homepage.
+Shows all active products. Users can browse and add to cart.
+Integrates with timeline (see what others are posting about products).
+"""
+from app.models import Product, CartItem, User
+from flask import request
+
+# Get all active products
+products = list(Product.query.filter_by(is_active=True).order_by(Product.created_at.desc()).all())
+
+# Group by category
+from collections import defaultdict
+products_by_category = defaultdict(list)
+for product in products:
+    category = product.category or 'Uncategorized'
+    products_by_category[category].append(product)
+
+# Get cart count if user is logged in
+cart_count = 0
+if current_user.is_authenticated:
+    cart_count = CartItem.query.filter_by(user_id=current_user.id).count()
+
+# Check if user has subscription access
+user_subscription = current_user.subscription_status if current_user.is_authenticated else None
+
+page.title = 'Shop'
+page.products = products
+page.products_by_category = dict(products_by_category)
+page.cart_count = cart_count
+page.user_subscription = user_subscription
+---
+
+<div class="container mx-auto px-4 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-4xl font-bold">Shop</h1>
+            <p class="text-gray-600">Browse our product catalog</p>
+        </div>
+
+        {% if current_user.is_authenticated %}
+        <div class="flex gap-4">
+            <a href="/shop/cart" class="btn btn-outline">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+                Cart
+                {% if cart_count > 0 %}
+                <span class="badge badge-primary">{{ cart_count }}</span>
+                {% endif %}
+            </a>
+
+            <a href="/shop/orders" class="btn btn-ghost">My Orders</a>
+        </div>
+        {% else %}
+        <a href="/login?next=/shop" class="btn btn-primary">Sign in to shop</a>
+        {% endif %}
+    </div>
+
+    {% if products|length == 0 %}
+    <div class="alert alert-info">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <span>No products available yet. Check back soon!</span>
+    </div>
+    {% else %}
+        {% for category, category_products in products_by_category.items() %}
+        <div class="mb-12">
+            <h2 class="text-2xl font-bold mb-4">{{ category }}</h2>
+
+            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {% for product in category_products %}
+                <div class="card bg-base-100 shadow-xl">
+                    {% if product.image_url %}
+                    <figure class="h-48 bg-gray-200">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}" class="object-cover w-full h-full">
+                    </figure>
+                    {% else %}
+                    <figure class="h-48 bg-gray-200 flex items-center justify-center">
+                        <svg class="w-16 h-16 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clip-rule="evenodd"/>
+                        </svg>
+                    </figure>
+                    {% endif %}
+
+                    <div class="card-body">
+                        <h3 class="card-title">{{ product.name }}</h3>
+                        <p class="text-sm text-gray-600">{{ product.description[:100] }}{% if product.description|length > 100 %}...{% endif %}</p>
+
+                        <div class="flex items-center justify-between mt-4">
+                            <div>
+                                <span class="text-2xl font-bold">${{ "%.2f"|format(product.price / 100) }}</span>
+                                {% if product.stock_quantity <= 0 %}
+                                <div class="badge badge-warning">Out of Stock</div>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        {% if product.requires_subscription %}
+                        <div class="badge badge-info">Requires {{ product.requires_subscription|title }} subscription</div>
+                        {% endif %}
+
+                        <div class="card-actions justify-between mt-4">
+                            <a href="/shop/product/{{ product.id }}" class="btn btn-sm btn-ghost">Details</a>
+
+                            {% if current_user.is_authenticated %}
+                                {% if product.stock_quantity > 0 %}
+                                    {% if product.requires_subscription and (not user_subscription or user_subscription != 'active') %}
+                                    <a href="/pricing" class="btn btn-sm btn-primary">Subscribe to Buy</a>
+                                    {% else %}
+                                    <form action="/shop/cart/add" method="POST">
+                                        <input type="hidden" name="product_id" value="{{ product.id }}">
+                                        <button type="submit" class="btn btn-sm btn-primary">Add to Cart</button>
+                                    </form>
+                                    {% endif %}
+                                {% else %}
+                                <button class="btn btn-sm btn-disabled">Out of Stock</button>
+                                {% endif %}
+                            {% else %}
+                            <a href="/login?next=/shop" class="btn btn-sm btn-primary">Sign in to Buy</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    {% if current_user.is_admin %}
+    <div class="fixed bottom-8 right-8">
+        <a href="/admin/products" class="btn btn-circle btn-lg btn-primary shadow-lg">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+        </a>
+    </div>
+    {% endif %}
+</div>

@@ -6,9 +6,9 @@
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![Hyperflask](https://img.shields.io/badge/framework-Hyperflask-blueviolet.svg)](https://hyperflask.dev)
 
-AutoHyperFlask is a fully-configured, production-ready starter template for building full-stack Python web applications with Hyperflask. It includes a complete modern asset pipeline, comprehensive testing infrastructure, mobile-responsive design, and zero-config deployment to Replit.
+AutoHyperFlask is a fully-configured, production-ready starter template for building full-stack Python web applications with Hyperflask. It combines **content creation** (timeline) and **e-commerce** (shop) into one unified platform - like WordPress + Shopify combined. Includes complete asset pipeline, comprehensive testing, mobile-responsive design, and zero-config deployment to Replit.
 
-**🎯 Perfect for:** Rapid prototyping, SaaS MVPs, internal tools, and learning Hyperflask
+**🎯 Perfect for:** Social commerce platforms, creator marketplaces, content + product communities, SaaS MVPs, and learning Hyperflask
 
 ## ✨ Features
 
@@ -71,16 +71,34 @@ Visit http://localhost:5000
 
 ## 📚 What's Included
 
-This is a **timeline-based photo submission application** that demonstrates:
+This is a **content + commerce platform** that demonstrates:
 
+### Content Features (Timeline)
+- User-generated timeline posts with photos/captions
+- Community feed of approved posts
+- Link posts to products (social commerce)
+- Responsive, mobile-friendly timeline
+
+### Commerce Features (Shop)
+- Product catalog with categories
+- Shopping cart and checkout flow
+- Stripe payment integration (mock/test/live modes)
+- Order management
+- Subscription-gated products
+
+### Platform Features
 - User authentication and authorization
-- Database models and relationships
-- File-based routing with `.jpy` files
-- Admin dashboard (first registered user becomes admin)
-- Responsive mobile-friendly UI
-- Modern frontend tooling
+- Admin dashboard (manage both content and products)
+- Subscription tiers with Stripe
+- Modern asset pipeline (esbuild + TailwindCSS)
+- Comprehensive testing (unit, integration, E2E)
 
-**Use it as a starting point** and customize to build your own application!
+**Use it as a starting point** to build:
+- Social commerce platforms
+- Creator marketplaces
+- Community-driven stores
+- Content platforms with monetization
+- Hybrid SaaS + e-commerce apps
 
 ## Development Environment
 
@@ -439,6 +457,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📖 Documentation
 
 - [Hyperflask Documentation](https://docs.hyperflask.dev)
+- [CONTENT-COMMERCE-INTEGRATION.md](CONTENT-COMMERCE-INTEGRATION.md) - **How timeline + shop work together**
 - [STRIPE-SETUP.md](STRIPE-SETUP.md) - **Optional** Stripe subscriptions setup (mock/test/live modes)
 - [AUTOHYPERFLASK-ONE-CLICK-PLAN.md](AUTOHYPERFLASK-ONE-CLICK-PLAN.md) - Detailed analysis and roadmap
 - [scripts/README.md](scripts/README.md) - Database and utility scripts

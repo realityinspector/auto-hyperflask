@@ -1,21 +1,196 @@
-{% extends "layout.html" %}
+---
+"""
+Homepage - showcases both content (timeline) and commerce (shop) features.
+"""
+from app.models import Product, TimelineEntry
 
-{% block content %}
-<div class="m-auto mt-4 sm:mt-10 max-w-[800px] px-4">
-    <div class="prose prose-sm sm:prose lg:prose-lg max-w-none">
-        <h1 class="text-2xl sm:text-3xl lg:text-4xl">Welcome to Timeline Photo App</h1>
-        <p class="text-base sm:text-lg">
-            A timeline-based photo submission application built with Hyperflask.
+# Get recent products
+recent_products = list(Product.query.filter_by(is_active=True).order_by(Product.created_at.desc()).limit(3).all())
+
+# Get recent timeline entries
+recent_timeline = list(TimelineEntry.query.filter_by(status='approved').order_by(TimelineEntry.created_at.desc()).limit(3).all())
+
+page.title = 'Home'
+page.recent_products = recent_products
+page.recent_timeline = recent_timeline
+---
+
+<div class="container mx-auto px-4 py-8">
+    <!-- Hero Section -->
+    <div class="hero bg-base-200 rounded-lg mb-12">
+        <div class="hero-content text-center py-12">
+            <div class="max-w-2xl">
+                <h1 class="text-5xl font-bold mb-4">
+                    <i class="bi bi-lightning-charge text-primary"></i>
+                    AutoHyperFlask
+                </h1>
+                <p class="text-xl mb-2">Content + Commerce Platform</p>
+                <p class="text-base-content/70 mb-6">
+                    Share your story on the timeline and discover products in the shop.
+                </p>
+                <div class="flex gap-4 justify-center flex-wrap">
+                    <a href="/timeline" class="btn btn-primary">
+                        <i class="bi bi-clock-history"></i>
+                        Browse Timeline
+                    </a>
+                    <a href="/shop" class="btn btn-outline">
+                        <i class="bi bi-shop"></i>
+                        Shop Now
+                    </a>
+                    {% if current_user.is_authenticated %}
+                    {% else %}
+                    <a href="/login" class="btn btn-ghost">Sign In</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="grid md:grid-cols-2 gap-8 mb-12">
+        <!-- Timeline Feature -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">
+                    <i class="bi bi-clock-history text-primary"></i>
+                    Timeline
+                </h2>
+                <p>Share your moments, connect with products, and see what others are posting.</p>
+                <div class="stats stats-vertical shadow mt-4">
+                    <div class="stat">
+                        <div class="stat-title">Content Creation</div>
+                        <div class="stat-value text-primary">{{ recent_timeline|length }}+</div>
+                        <div class="stat-desc">Recent posts</div>
+                    </div>
+                </div>
+                <div class="card-actions justify-end mt-4">
+                    <a href="/timeline" class="btn btn-primary btn-sm">View Timeline</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shop Feature -->
+        <div class="card bg-base-100 shadow-xl">
+            <div class="card-body">
+                <h2 class="card-title">
+                    <i class="bi bi-shop text-secondary"></i>
+                    Shop
+                </h2>
+                <p>Browse products, add to cart, and discover what the community loves.</p>
+                <div class="stats stats-vertical shadow mt-4">
+                    <div class="stat">
+                        <div class="stat-title">E-Commerce</div>
+                        <div class="stat-value text-secondary">{{ recent_products|length }}+</div>
+                        <div class="stat-desc">Products available</div>
+                    </div>
+                </div>
+                <div class="card-actions justify-end mt-4">
+                    <a href="/shop" class="btn btn-secondary btn-sm">Browse Shop</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Products -->
+    {% if recent_products|length > 0 %}
+    <div class="mb-12">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Featured Products</h2>
+            <a href="/shop" class="btn btn-ghost btn-sm">View All →</a>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            {% for product in recent_products %}
+            <div class="card bg-base-100 shadow-md hover:shadow-xl transition-shadow">
+                {% if product.image_url %}
+                <figure class="h-40">
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="object-cover w-full h-full">
+                </figure>
+                {% else %}
+                <figure class="h-40 bg-gray-200 flex items-center justify-center">
+                    <i class="bi bi-image text-4xl text-gray-400"></i>
+                </figure>
+                {% endif %}
+                <div class="card-body">
+                    <h3 class="card-title text-base">{{ product.name }}</h3>
+                    <p class="text-2xl font-bold text-primary">${{ "%.2f"|format(product.price / 100) }}</p>
+                    <div class="card-actions">
+                        <a href="/shop/product/{{ product.id }}" class="btn btn-sm btn-primary w-full">View Details</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Recent Timeline Posts -->
+    {% if recent_timeline|length > 0 %}
+    <div class="mb-12">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold">Recent Posts</h2>
+            <a href="/timeline" class="btn btn-ghost btn-sm">View All →</a>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            {% for entry in recent_timeline %}
+            <div class="card bg-base-100 shadow-md">
+                {% if entry.photo_url %}
+                <figure class="h-40">
+                    <img src="{{ entry.photo_url }}" alt="{{ entry.caption }}" class="object-cover w-full h-full">
+                </figure>
+                {% endif %}
+                <div class="card-body">
+                    <p class="text-sm">{{ entry.caption[:100] }}{% if entry.caption|length > 100 %}...{% endif %}</p>
+                    <div class="flex items-center gap-2 text-sm text-gray-600">
+                        <span>{{ entry.created_at.strftime('%b %d') }}</span>
+                        {% if entry.product_id %}
+                        <span>•</span>
+                        <i class="bi bi-tag text-primary"></i>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- How It Works -->
+    <div class="card bg-gradient-to-r from-primary/10 to-secondary/10 shadow-lg">
+        <div class="card-body">
+            <h2 class="card-title text-2xl mb-4">How Content + Commerce Works Together</h2>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-primary rounded-full flex items-center justify-center">
+                        <i class="bi bi-cart text-2xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">1. Shop Products</h3>
+                    <p class="text-sm">Browse and purchase from our curated product catalog</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-secondary rounded-full flex items-center justify-center">
+                        <i class="bi bi-camera text-2xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">2. Share Your Story</h3>
+                    <p class="text-sm">Post about products you love on your timeline</p>
+                </div>
+                <div class="text-center">
+                    <div class="w-16 h-16 mx-auto mb-4 bg-accent rounded-full flex items-center justify-center">
+                        <i class="bi bi-people text-2xl text-white"></i>
+                    </div>
+                    <h3 class="font-bold mb-2">3. Discover Together</h3>
+                    <p class="text-sm">See what others are posting and find new products</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="text-center mt-12 mb-8">
+        <p class="text-sm text-base-content/70 mb-4">
+            Test accounts: user1@test.com, user2@test.com, admin@test.com (password: "password")
         </p>
-        <ul class="space-y-2">
-            <li><a href="{{ url_for('timeline_index') }}" class="link link-primary">View Timeline</a></li>
-            {% if current_user and current_user.is_admin %}
-            <li><a href="{{ url_for('admin_index') }}" class="link link-primary">Admin Dashboard</a></li>
-            {% endif %}
-        </ul>
-        <p class="text-xs sm:text-sm mt-8 text-base-content/70">
-            Test accounts: user1@test.com, user2@test.com, admin@test.com
-        </p>
+        {% if not current_user.is_authenticated %}
+        <a href="/login" class="btn btn-primary">Get Started</a>
+        {% endif %}
     </div>
 </div>
-{% endblock %}
