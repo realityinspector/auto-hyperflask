@@ -1,0 +1,30 @@
+[nix]
+channel = "stable-23_11"
+
+# Automatically run setup on first boot
+onBoot = "bash scripts/replit-setup.sh"
+
+# Run development server
+run = "bash scripts/replit-run.sh"
+
+# Environment variables
+[env]
+PATH = "/home/runner/.local/bin:/home/runner/node_modules/.bin:${PATH}"
+
+# Production deployment
+[deployment]
+run = ["bash", "scripts/replit-deploy.sh"]
+deploymentTarget = "cloudrun"
+
+# Command shortcuts for testing
+[[commands]]
+key = "test"
+command = "nix-shell --run 'source venv/bin/activate && python3 -m pytest tests/ -v'"
+
+[[commands]]
+key = "test-e2e"
+command = "nix-shell --run 'source venv/bin/activate && python3 -m pytest tests/test_e2e_playwright.py -v'"
+
+[[commands]]
+key = "reset-db"
+command = "nix-shell --run 'source venv/bin/activate && python3 scripts/reset_db.py --seed --confirm'"

@@ -27,9 +27,20 @@ AutoHyperFlask is a fully-configured, production-ready starter template for buil
 
 ### Option 1: Deploy to Replit (Recommended)
 
-1. Fork this repository or import it to Replit
-2. Set `FLASK_SECRET_KEY` in Replit Secrets
-3. Click "Run" - that's it!
+[![Run on Replit](https://replit.com/badge/github/realityinspector/auto-hyperflask)](https://replit.com/new/github/realityinspector/auto-hyperflask)
+
+**What happens when you click:**
+1. ✅ Replit clones the repository
+2. ✅ Nix installs system dependencies (Python, Node, PostgreSQL, Chromium)
+3. ✅ Onboarding script runs automatically on first boot
+4. ✅ Database initialized with test data (3 users, 20 timeline entries)
+5. ✅ Frontend assets built (JS, CSS, icons)
+6. ✅ Dev server starts on port 5000
+7. ✅ Tests validate the setup
+
+**Time to working app: ~2 minutes** ⚡
+
+**Note:** E2E tests are optional and will run automatically if the environment is ready. You can also run them manually after setup completes.
 
 ### Option 2: Local Development
 

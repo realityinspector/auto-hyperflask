@@ -3,12 +3,13 @@ name = "my_hyperflask_app"
 version = "0.1.0"
 requires-python = ">=3.10"
 dependencies = [
-    "hyperflask >=0.5.0",
+    "hyperflask >=0.5.0,<0.6.0",  # Pin to 0.5.x for forward compatibility
     "hyperflask-users",
     "periodiq", # will be installed from git while an official release is missing
     "pillow",
     "psycopg[binary]",
-    "requests"
+    "requests",
+    "sqlalchemy"  # Explicit dependency for database operations
 ]
 
 [dependency-groups]
@@ -17,9 +18,13 @@ dev = [
     "pytest-cov>=6.2.1",
     "pytest-flask>=1.3.0",
     "pytest-asyncio",
-    "pytest-playwright>=0.7.1",
-    "playwright>=1.55.0",
     "ruff>=0.12.4"
+]
+
+# Optional E2E testing dependencies (requires system libraries)
+e2e = [
+    "pytest-playwright>=0.7.1",
+    "playwright>=1.55.0"
 ]
 
 [tool.uv.sources]
@@ -45,7 +50,7 @@ addopts = [
     "--tb=short",
 ]
 markers = [
-    "e2e: End-to-end tests using Playwright",
+    "e2e: End-to-end tests using Playwright (skip with: -m 'not e2e')",
     "unit: Unit tests",
     "integration: Integration tests",
 ]
