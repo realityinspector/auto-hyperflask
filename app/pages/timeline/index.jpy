@@ -1,0 +1,42 @@
+---
+from app.models import TimelineEntry
+
+page.entries = TimelineEntry.find_all(status='approved', order_by='-timestamp')
+---
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="m-auto mt-4 sm:mt-10 max-w-[900px]">
+    <h1 class="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6">Timeline</h1>
+    
+    {% if entries %}
+        <div class="space-y-3 sm:space-y-4">
+            {% for entry in entries %}
+                <div class="card bg-base-100 shadow-xl">
+                    <div class="card-body p-4 sm:p-6">
+                        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-0">
+                            <div class="flex-1">
+                                <h2 class="card-title text-base sm:text-lg">{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}</h2>
+                                <p class="text-xs sm:text-sm text-gray-500 mt-1">by {{ entry.user.email }}</p>
+                            </div>
+                            <div class="badge badge-success badge-sm sm:badge-md">{{ entry.status }}</div>
+                        </div>
+                        {% if entry.caption %}
+                            <p class="text-sm sm:text-base mt-2">{{ entry.caption }}</p>
+                        {% endif %}
+                        {% if entry.photo_url %}
+                            <div class="mt-3 sm:mt-4">
+                                <img src="{{ entry.photo_url }}" alt="Timeline photo" class="rounded-lg max-w-full w-full object-cover" />
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert">
+            <span>No timeline entries yet. Run the seeding script to add test data.</span>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

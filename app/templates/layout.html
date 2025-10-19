@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="AutoHyperFlask - Timeline photo submission application">
+    <meta name="theme-color" content="#570df8">
+    <title>{% block title %}AutoHyperFlask{% endblock %}</title>
+
+    <!-- Compiled CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='dist/main.css') }}">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap-icons/bootstrap-icons.css') }}">
+
+    {% block head %}{% endblock %}
+</head>
+<body>
+    <div class="min-h-screen bg-base-200">
+        <!-- Navigation -->
+        <nav class="navbar bg-base-100 shadow-lg">
+            <div class="flex-1">
+                <a href="/" class="btn btn-ghost text-lg sm:text-xl normal-case">
+                    <i class="bi bi-lightning-charge"></i>
+                    <span class="hidden xs:inline">AutoHyperFlask</span>
+                    <span class="xs:hidden">AHF</span>
+                </a>
+            </div>
+            <div class="flex-none">
+                <!-- Desktop Menu -->
+                <ul class="menu menu-horizontal px-1 hidden md:flex">
+                    <li><a href="/">Home</a></li>
+                    <li><a href="/timeline">Timeline</a></li>
+                    {% if current_user and current_user.is_admin %}
+                    <li><a href="/admin">Admin</a></li>
+                    {% endif %}
+                </ul>
+
+                <!-- Mobile Menu Dropdown -->
+                <div class="dropdown dropdown-end md:hidden">
+                    <label tabindex="0" class="btn btn-ghost btn-circle">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </label>
+                    <ul tabindex="0" class="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/timeline">Timeline</a></li>
+                        {% if current_user and current_user.is_admin %}
+                        <li><a href="/admin">Admin</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            {% block content %}{% endblock %}
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer footer-center p-4 sm:p-6 bg-base-300 text-base-content mt-10">
+            <div class="text-center">
+                <p class="text-sm sm:text-base">Built with
+                    <i class="bi bi-heart-fill text-error"></i>
+                    using <a href="https://hyperflask.dev" class="link link-primary">Hyperflask</a>
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Compiled JavaScript with Alpine.js and HTMX -->
+    <script src="{{ url_for('static', filename='dist/main.js') }}"></script>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>

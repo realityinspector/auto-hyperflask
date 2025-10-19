@@ -1,0 +1,11 @@
+/* AutoHyperFlask - Main Stylesheet */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+@layer components {
+  .card-hover {
+    @apply transition-transform hover:scale-105;
+  }
+}

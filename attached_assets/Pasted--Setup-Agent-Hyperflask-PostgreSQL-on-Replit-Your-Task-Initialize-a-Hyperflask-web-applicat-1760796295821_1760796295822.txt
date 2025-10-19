@@ -1,0 +1,72 @@
+# Setup Agent: Hyperflask + PostgreSQL on Replit
+
+## Your Task
+
+Initialize a Hyperflask web application on Replit with PostgreSQL database, user authentication, and basic project structure. This is the foundation infrastructure for a timeline-based photo submission app.
+
+## Steps to Complete
+
+**1. Initialize Hyperflask Project**
+```bash
+curl -L https://raw.githubusercontent.com/hyperflask/hyperflask-start/main/start.sh | bash
+```
+Choose options: PostgreSQL database, include authentication.
+
+**2. Configure PostgreSQL on Replit**
+- Enable Replit PostgreSQL service
+- Set database environment variables:
+  - `DATABASE_URL` (dev database, Replit provides)
+  - `PROD_DATABASE_URL` (prod database, create separate)
+- Verify connection with `uv run hyperflask shell` → test query
+
+**3. Install Additional Dependencies**
+Add to `pyproject.toml`:
+```toml
+dependencies = [
+    "hyperflask",
+    "hyperflask-users",
+    "pillow",
+    "requests",
+    "pytest",
+    "pytest-asyncio"
+]
+```
+
+**4. Database Models Setup**
+Create base models in `app/models.py`:
+- User model (via hyperflask-users UserMixin)
+- TimelineEntry model with fields: id, timestamp, user_id, status, created_at
+- Add indexes on timestamp and user_id
+
+Run migrations: `uv run hyperflask db upgrade`
+
+**5. Generate Test Data**
+Create `scripts/seed_db.py`:
+- 3 test users (emails: user1@test.com, user2@test.com, admin@test.com)
+- 20 mock timeline entries with random timestamps from past 7 days
+- All entries status='approved' for visibility
+
+**6. Basic Routes**
+Create placeholder pages:
+- `app/pages/index.jpy` → homepage
+- `app/pages/timeline/index.jpy` → timeline view
+- `app/pages/admin/index.jpy` → admin dashboard (login required)
+
+**7. Verification Tests**
+Create `tests/test_setup.py`:
+- Database connection works
+- User authentication works
+- Test users can log in
+- Timeline entries query successfully
+- All routes return 200 OK
+
+## Success Criteria
+
+When complete:
+- `uv run hyperflask dev` starts server at localhost:5000
+- Can register new user and log in
+- Database has 3 test users and 20 timeline entries
+- `uv run pytest` passes all setup tests
+- Dev container opens correctly in VS Code
+
+Output a summary of: database URL (masked), number of users created, number of timeline entries, all route paths created.

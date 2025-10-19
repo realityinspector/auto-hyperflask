@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="m-auto mt-4 sm:mt-10 max-w-[800px] px-4">
+    <div class="prose prose-sm sm:prose lg:prose-lg max-w-none">
+        <h1 class="text-2xl sm:text-3xl lg:text-4xl">Welcome to Timeline Photo App</h1>
+        <p class="text-base sm:text-lg">
+            A timeline-based photo submission application built with Hyperflask.
+        </p>
+        <ul class="space-y-2">
+            <li><a href="{{ url_for('timeline_index') }}" class="link link-primary">View Timeline</a></li>
+            {% if current_user and current_user.is_admin %}
+            <li><a href="{{ url_for('admin_index') }}" class="link link-primary">Admin Dashboard</a></li>
+            {% endif %}
+        </ul>
+        <p class="text-xs sm:text-sm mt-8 text-base-content/70">
+            Test accounts: user1@test.com, user2@test.com, admin@test.com
+        </p>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+---
+from app.models import TimelineEntry, User
+from flask import abort
+
+page.login_required()
+
+# Check if user is admin
+current_user = page.current_user()
+if not current_user or not current_user.is_admin:
+    abort(403)  # Forbidden
+
+page.entries = TimelineEntry.find_all(order_by='-created_at', limit=50)
+page.users = User.find_all()
+---
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="m-auto mt-10 max-w-[1200px]">
+    <h1 class="text-3xl font-bold mb-6">Admin Dashboard</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Total Users</div>
+                <div class="stat-value">{{ users|length }}</div>
+            </div>
+        </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Total Entries</div>
+                <div class="stat-value">{{ entries|length }}</div>
+            </div>
+        </div>
+        <div class="stats shadow">
+            <div class="stat">
+                <div class="stat-title">Approved</div>
+                <div class="stat-value text-success">{{ entries|selectattr('status', 'equalto', 'approved')|list|length }}</div>
+            </div>
+        </div>
+    </div>
+    
+    <h2 class="text-2xl font-bold mb-4">Recent Timeline Entries</h2>
+    <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>User</th>
+                    <th>Timestamp</th>
+                    <th>Status</th>
+                    <th>Caption</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.id }}</td>
+                    <td>{{ entry.user.email }}</td>
+                    <td>{{ entry.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                    <td><span class="badge badge-{{ 'success' if entry.status == 'approved' else 'warning' }}">{{ entry.status }}</span></td>
+                    <td>{{ entry.caption[:50] if entry.caption else '-' }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

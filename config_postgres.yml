@@ -1,0 +1,8 @@
+# PostgreSQL configuration template
+# Set DATABASE_URL environment variable with your PostgreSQL connection string
+# Example: postgresql://username:password@host:port/database?sslmode=require
+sqlorm_uri: ${DATABASE_URL}
+sqlorm_migrations_folder: "../database/migrations"
+dramatiq_broker: sqlite://database/tasks.db
+assets_tailwind: main.css
+secret_key: ${FLASK_SECRET_KEY}

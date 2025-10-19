@@ -1,0 +1,112 @@
+2025-10-18 14:15:50 [2582] [INFO] No maxmind db file found, geolocation is disabled
+2025-10-18 14:15:50 [2582] [DEBUG] Creating new connection
+2025-10-18 14:15:50 [2582] [INFO] Creating table user
+2025-10-18 14:15:50 [2582] [DEBUG] Creating new connection
+Traceback (most recent call last):
+  File "/home/runner/workspace/.pythonlibs/bin/hyperflask", line 8, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/hyperflask/cli/__init__.py", line 46, in main
+    cli.main()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/click/core.py", line 1383, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/click/core.py", line 1850, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/click/core.py", line 1850, in invoke
+    return _process_result(sub_ctx.command.invoke(sub_ctx))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/click/core.py", line 1246, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/click/core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/click/decorators.py", line 34, in new_func
+    return f(get_current_context(), *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask/cli.py", line 400, in decorator
+    return ctx.invoke(f, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/click/core.py", line 814, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_sqlorm/__init__.py", line 76, in init
+    self.init_db()
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/flask_sqlorm/__init__.py", line 127, in init_db
+    init_db(**kwargs)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/schema.py", line 16, in init_db
+    create_all(model_registry, engine=engine, check_missing=True, logger=logger)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/schema.py", line 35, in create_all
+    create_table(model.__mapper__, **kwargs)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/sqlfunc.py", line 77, in wrapper
+    return executor(
+           ^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/sqlfunc.py", line 139, in execute
+    tx.execute(stmt)
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/engine.py", line 496, in execute
+    self.cursor(stmt, params).close()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/engine.py", line 470, in cursor
+    cur = self.session.connect().cursor()
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/engine.py", line 339, in connect
+    self.conn = self.engine.connect()
+                ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/engine.py", line 96, in connect
+    conn = self._connect()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/engine.py", line 106, in _connect
+    conn = self.connection_factory(self.dbapi)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/sqlorm/engine.py", line 62, in connect
+    return dbapi.connect(*connect.args, **connect.kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/psycopg/connection.py", line 95, in connect
+    params = cls._get_connection_params(conninfo, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/psycopg/connection.py", line 178, in _get_connection_params
+    return conninfo_to_dict(conninfo, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/psycopg/conninfo.py", line 82, in conninfo_to_dict
+    opts = _parse_conninfo(conninfo)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/workspace/.pythonlibs/lib/python3.11/site-packages/psycopg/conninfo.py", line 103, in _parse_conninfo
+    raise e.ProgrammingError(str(ex)) from None
+psycopg.ProgrammingError: missing "=" after "neondb_owner:npg_qIlkYG0sL8ft@ep-nameless-math-ae9inxff.c-2.us-east-2.aws.neon.tech/neondb" in connection info string
+
+Starting Hyperflask processes...
+14:15:50 system      | web.1 started (pid=2591)
+14:15:50 system      | scheduler.1 started (pid=2595)
+14:15:50 system      | assets.1 started (pid=2596)
+14:15:50 system      | worker.1 started (pid=2597)
+14:15:51 scheduler.1 | 2025-10-18 14:15:51 [2595] [INFO] No maxmind db file found, geolocation is disabled
+14:15:51 worker.1    | 2025-10-18 14:15:51 [2597] [INFO] No maxmind db file found, geolocation is disabled
+14:15:51 web.1       | 2025-10-18 14:15:51 [2591] [INFO] No maxmind db file found, geolocation is disabled
+14:15:51 scheduler.1 | No Dramatiq actors found.
+14:15:51 assets.1    | 2025-10-18 14:15:51 [2596] [INFO] No maxmind db file found, geolocation is disabled
+14:15:51 worker.1    | No Dramatiq actors found.
+14:15:51 web.1       |  * Debug mode: on
+14:15:51 web.1       | 2025-10-18 14:15:51 [2591] [INFO] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+14:15:51 web.1       |  * Running on http://127.0.0.1:5000
+14:15:51 web.1       | 2025-10-18 14:15:51 [2591] [INFO] Press CTRL+C to quit
+14:15:51 web.1       | 2025-10-18 14:15:51 [2591] [INFO]  * Restarting with watchdog (inotify)
+14:15:51 system      | scheduler.1 stopped (rc=10)
+14:15:51 system      | worker.1 stopped (rc=10)
+14:15:51 assets.1    | Starting with livereload enabled on port 7878
+14:15:51 assets.1    | 2025-10-18 14:15:51 [2596] [DEBUG] Removing target of file copy: /home/runner/workspace/public/bootstrap-icons
+14:15:51 assets.1    | 2025-10-18 14:15:51 [2596] [DEBUG] Copying files from 'node_modules/bootstrap-icons/font' to '/home/runner/workspace/public/bootstrap-icons'
+14:15:51 assets.1    | Extracting bundled assets from templates
+14:15:52 assets.1    | 2025-10-18 14:15:52 [2596] [INFO] WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+14:15:52 assets.1    |  * Running on http://127.0.0.1:7878
+14:15:52 assets.1    | 2025-10-18 14:15:52 [2596] [INFO] Press CTRL+C to quit
+14:15:53 assets.1    | [esbuild][watch] build finished, watching for changes...
+14:15:53 web.1       | 2025-10-18 14:15:53 [2638] [INFO] No maxmind db file found, geolocation is disabled
+14:15:53 assets.1    | Reloading
+14:15:53 assets.1    | [tailwind]≈ tailwindcss v4.1.14
+14:15:53 assets.1    | [tailwind]
+14:15:53 web.1       | 2025-10-18 14:15:53 [2638] [WARNING]  * Debugger is active!
+14:15:53 web.1       | 2025-10-18 14:15:53 [2638] [INFO]  * Debugger PIN: 661-782-256
+14:15:53 assets.1    | [tailwind]/*! 🌼 daisyUI 5.3.7 */
+14:15:54 assets.1    | [tailwind]Done in 725ms

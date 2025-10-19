@@ -1,0 +1,32 @@
+{
+  "name": "autohyperflask",
+  "version": "1.0.0",
+  "description": "AutoHyperFlask - One-click Hyperflask deployment for Replit",
+  "scripts": {
+    "build": "node scripts/smart-build.js",
+    "build:all": "npm run build:js && npm run build:css && npm run build:icons",
+    "build:force": "node scripts/smart-build.js --force",
+    "build:js": "node build.js",
+    "build:css": "tailwindcss -i app/assets/main.css -o public/dist/main.css --minify",
+    "build:icons": "node scripts/copy-icons.js",
+    "dev": "npm run dev:js & npm run dev:css",
+    "dev:js": "node build.js --watch",
+    "dev:css": "tailwindcss -i app/assets/main.css -o public/dist/main.css --watch",
+    "clean": "rm -rf public/dist public/bootstrap-icons .build-cache.json",
+    "clean:macos": "bash scripts/clean-macos.sh",
+    "prebuild": "npm run clean:macos"
+  },
+  "dependencies": {
+    "bootstrap-icons": "^1.13.1",
+    "alpinejs": "^3.15.0",
+    "htmx-ext-sse": "^2.2.3",
+    "htmx.org": "^2.0.7"
+  },
+  "devDependencies": {
+    "daisyui": "^5.1.12",
+    "esbuild": "^0.25.9",
+    "tailwindcss": "^4.1.13",
+    "@tailwindcss/cli": "^4.1.13",
+    "@tailwindcss/typography": "^0.5.16"
+  }
+}
