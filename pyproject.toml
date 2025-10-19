@@ -27,6 +27,12 @@ e2e = [
     "playwright>=1.55.0"
 ]
 
+# Optional Stripe payments integration
+stripe = [
+    "stripe>=11.0.0",
+    "python-dotenv>=1.0.0"  # For local .env file support
+]
+
 [tool.uv.sources]
 periodiq = { git = "https://gitlab.com/bersace/periodiq" }
 

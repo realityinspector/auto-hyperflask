@@ -1,0 +1,143 @@
+---
+"""
+Pricing page - displays subscription plans.
+Only shown if Stripe is enabled in config.
+"""
+from app.services.stripe_service import stripe_service
+
+# Check if Stripe is enabled
+if not stripe_service.is_enabled():
+    page.redirect = '/'
+    page.flash('Subscriptions are not available at this time.', 'info')
+    return
+
+# Define pricing plans (these should match your Stripe Price IDs)
+plans = [
+    {
+        'name': 'Basic',
+        'price': '$9',
+        'period': 'month',
+        'price_id': 'price_test_basic_monthly',  # Replace with your actual Stripe Price ID
+        'features': [
+            '10 timeline entries per month',
+            'Basic support',
+            'Email notifications',
+        ],
+        'highlighted': False,
+    },
+    {
+        'name': 'Pro',
+        'price': '$29',
+        'period': 'month',
+        'price_id': 'price_test_pro_monthly',  # Replace with your actual Stripe Price ID
+        'features': [
+            'Unlimited timeline entries',
+            'Priority support',
+            'Email notifications',
+            'Advanced analytics',
+            'Custom branding',
+        ],
+        'highlighted': True,  # Most popular
+    },
+    {
+        'name': 'Enterprise',
+        'price': '$99',
+        'period': 'month',
+        'price_id': 'price_test_enterprise_monthly',  # Replace with your actual Stripe Price ID
+        'features': [
+            'Everything in Pro',
+            'Dedicated account manager',
+            'Custom integrations',
+            'SLA guarantee',
+            'Advanced security',
+        ],
+        'highlighted': False,
+    },
+]
+
+page.title = 'Pricing Plans'
+page.plans = plans
+page.stripe_enabled = True
+---
+
+<div class="container mx-auto px-4 py-8">
+    <div class="text-center mb-12">
+        <h1 class="text-4xl font-bold mb-4">Choose Your Plan</h1>
+        <p class="text-xl text-gray-600">Select the perfect plan for your needs</p>
+        {% if app.config.get('stripe_mode') == 'mock' %}
+        <div class="alert alert-info mt-4">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <span><strong>Demo Mode:</strong> Stripe is in mock mode. No real payments will be processed.</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        {% for plan in plans %}
+        <div class="card bg-base-100 shadow-xl {% if plan.highlighted %}border-2 border-primary{% endif %}">
+            {% if plan.highlighted %}
+            <div class="badge badge-primary absolute top-0 right-0 m-4">Most Popular</div>
+            {% endif %}
+
+            <div class="card-body">
+                <h2 class="card-title text-2xl justify-center">{{ plan.name }}</h2>
+
+                <div class="text-center my-6">
+                    <span class="text-5xl font-bold">{{ plan.price }}</span>
+                    <span class="text-gray-600">/{{ plan.period }}</span>
+                </div>
+
+                <ul class="space-y-3 mb-6">
+                    {% for feature in plan.features %}
+                    <li class="flex items-start">
+                        <svg class="w-5 h-5 text-success mr-2 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        <span>{{ feature }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+
+                <div class="card-actions justify-center">
+                    {% if current_user.is_authenticated %}
+                    <form action="/checkout/create-session" method="POST" class="w-full">
+                        <input type="hidden" name="price_id" value="{{ plan.price_id }}">
+                        <button type="submit" class="btn btn-primary w-full {% if plan.highlighted %}btn-lg{% endif %}">
+                            {% if current_user.subscription_plan == plan.name.lower() %}
+                                Current Plan
+                            {% else %}
+                                Select {{ plan.name }}
+                            {% endif %}
+                        </button>
+                    </form>
+                    {% else %}
+                    <a href="/login?next=/pricing" class="btn btn-primary w-full {% if plan.highlighted %}btn-lg{% endif %}">
+                        Sign in to subscribe
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% if current_user.is_authenticated and current_user.subscription_status %}
+    <div class="text-center mt-12">
+        <div class="card bg-base-200 max-w-2xl mx-auto">
+            <div class="card-body">
+                <h3 class="card-title">Your Current Subscription</h3>
+                <p>Plan: <strong>{{ current_user.subscription_plan|title }}</strong></p>
+                <p>Status: <span class="badge badge-{{ 'success' if current_user.subscription_status == 'active' else 'warning' }}">
+                    {{ current_user.subscription_status|title }}
+                </span></p>
+                {% if current_user.subscription_ends_at %}
+                <p>Renews: {{ current_user.subscription_ends_at.strftime('%B %d, %Y') }}</p>
+                {% endif %}
+                <div class="card-actions justify-center mt-4">
+                    <a href="/account/subscription" class="btn btn-outline">Manage Subscription</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>

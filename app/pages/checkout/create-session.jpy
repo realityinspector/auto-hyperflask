@@ -1,0 +1,48 @@
+---
+"""
+Create Stripe Checkout session and redirect to Stripe.
+"""
+from flask import request
+from app.services.stripe_service import stripe_service
+
+# Must be POST request
+if request.method != 'POST':
+    page.redirect = '/pricing'
+    return
+
+# Must be authenticated
+if not current_user.is_authenticated:
+    page.redirect = '/login?next=/pricing'
+    page.flash('Please sign in to subscribe.', 'error')
+    return
+
+# Check if Stripe is enabled
+if not stripe_service.is_enabled():
+    page.redirect = '/'
+    page.flash('Subscriptions are not available at this time.', 'error')
+    return
+
+# Get price_id from form
+price_id = request.form.get('price_id')
+if not price_id:
+    page.redirect = '/pricing'
+    page.flash('Please select a plan.', 'error')
+    return
+
+try:
+    # Create Stripe Checkout session
+    session = stripe_service.create_checkout_session(
+        customer_email=current_user.email,
+        price_id=price_id,
+        success_url=request.host_url.rstrip('/') + '/checkout/success?session_id={CHECKOUT_SESSION_ID}',
+        cancel_url=request.host_url.rstrip('/') + '/checkout/cancel',
+        mode='subscription'
+    )
+
+    # Redirect to Stripe Checkout
+    page.redirect = session['url']
+
+except Exception as e:
+    page.flash(f'Error creating checkout session: {str(e)}', 'error')
+    page.redirect = '/pricing'
+---

@@ -1,0 +1,41 @@
+---
+"""
+Checkout success page - shown after successful payment.
+"""
+from flask import request
+
+session_id = request.args.get('session_id')
+page.title = 'Payment Successful'
+page.session_id = session_id
+---
+
+<div class="container mx-auto px-4 py-16 text-center">
+    <div class="max-w-2xl mx-auto">
+        <div class="text-success mb-8">
+            <svg class="w-24 h-24 mx-auto" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+            </svg>
+        </div>
+
+        <h1 class="text-4xl font-bold mb-4">Payment Successful!</h1>
+
+        <p class="text-xl text-gray-600 mb-8">
+            Thank you for subscribing. Your account will be updated shortly.
+        </p>
+
+        <div class="alert alert-info mb-8">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            <div>
+                <p>We're processing your subscription. You'll receive a confirmation email shortly.</p>
+                {% if session_id %}
+                <p class="text-sm mt-2">Session ID: {{ session_id }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="space-x-4">
+            <a href="/" class="btn btn-primary">Go to Dashboard</a>
+            <a href="/pricing" class="btn btn-outline">View Plans</a>
+        </div>
+    </div>
+</div>

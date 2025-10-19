@@ -7,3 +7,10 @@ sqlorm_migrations_folder: "../database/migrations"
 dramatiq_broker: sqlite://database/tasks.db
 assets_tailwind: main.css
 secret_key: ${FLASK_SECRET_KEY}
+
+# Stripe configuration (optional - disabled by default)
+stripe_enabled: ${STRIPE_ENABLED:-false}
+stripe_mode: ${STRIPE_MODE:-test}  # mock, test, or live
+stripe_publishable_key: ${STRIPE_PUBLISHABLE_KEY}
+stripe_secret_key: ${STRIPE_SECRET_KEY}
+stripe_webhook_secret: ${STRIPE_WEBHOOK_SECRET}

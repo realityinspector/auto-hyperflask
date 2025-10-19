@@ -4,3 +4,10 @@ sqlorm_migrations_folder: "../database/migrations"
 dramatiq_broker: sqlite://database/tasks.db
 assets_tailwind: main.css
 secret_key: dev-secret-key-change-in-production
+
+# Stripe configuration (optional - disabled by default)
+stripe_enabled: false
+stripe_mode: mock  # mock, test, or live
+stripe_publishable_key: ${STRIPE_PUBLISHABLE_KEY:-pk_test_mock}
+stripe_secret_key: ${STRIPE_SECRET_KEY:-sk_test_mock}
+stripe_webhook_secret: ${STRIPE_WEBHOOK_SECRET:-whsec_mock}

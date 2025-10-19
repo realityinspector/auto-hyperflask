@@ -17,6 +17,20 @@ from tests.fixtures.playwright_fixtures import (
     setup_screenshots_dir,
 )
 
+# Import Stripe fixtures
+from tests.fixtures.stripe_fixtures import (
+    mock_stripe_api,
+    stripe_service_mock,
+    mock_stripe_customer,
+    mock_stripe_subscription,
+    mock_checkout_session,
+    completed_checkout_session,
+    stripe_webhook_event_checkout_completed,
+    stripe_webhook_event_subscription_deleted,
+    stripe_webhook_payload,
+    stripe_plans,
+)
+
 
 APP_ROOT = os.path.join(os.path.dirname(__file__), "..")
 
@@ -65,3 +79,11 @@ def app():
 @pytest.fixture
 def client(app):
     return app.test_client()
+
+
+@pytest.fixture
+def db_session(app):
+    """Provide database session for tests"""
+    from hyperflask.factory import db
+    with app.app_context():
+        yield db

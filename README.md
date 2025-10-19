@@ -22,6 +22,7 @@ AutoHyperFlask is a fully-configured, production-ready starter template for buil
 - 🎭 **Interactive Frontend** - Alpine.js + HTMX pre-configured
 - 📦 **Smart Builds** - Only rebuilds when files actually change
 - 🧪 **Test Fixtures** - Reusable Playwright fixtures for user/admin testing
+- 💳 **Optional Stripe Integration** - Mock/test/live modes for subscriptions (disabled by default)
 
 ## 🚀 Quick Start
 
@@ -438,6 +439,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📖 Documentation
 
 - [Hyperflask Documentation](https://docs.hyperflask.dev)
+- [STRIPE-SETUP.md](STRIPE-SETUP.md) - **Optional** Stripe subscriptions setup (mock/test/live modes)
 - [AUTOHYPERFLASK-ONE-CLICK-PLAN.md](AUTOHYPERFLASK-ONE-CLICK-PLAN.md) - Detailed analysis and roadmap
 - [scripts/README.md](scripts/README.md) - Database and utility scripts
 - [SECURITY.md](SECURITY.md) - Security policies and best practices

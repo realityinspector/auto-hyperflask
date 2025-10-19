@@ -7,6 +7,13 @@ import datetime
 class User(UserMixin, db.Model):
     is_admin: bool = db.Column(default=False)
 
+    # Stripe subscription fields (optional - only used if Stripe is enabled)
+    stripe_customer_id: str = db.Column(nullable=True, unique=True)
+    stripe_subscription_id: str = db.Column(nullable=True)
+    subscription_status: str = db.Column(nullable=True)  # active, canceled, past_due, trialing
+    subscription_plan: str = db.Column(nullable=True)    # basic, pro, enterprise (or your plan names)
+    subscription_ends_at: datetime.datetime = db.Column(nullable=True)
+
     @classmethod
     def create_user(cls, email, password=None, **kwargs):
         """

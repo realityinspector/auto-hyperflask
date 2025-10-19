@@ -1,0 +1,118 @@
+---
+"""
+Stripe webhook handler - receives events from Stripe.
+
+This endpoint handles:
+- checkout.session.completed: When customer completes payment
+- customer.subscription.updated: When subscription changes
+- customer.subscription.deleted: When subscription is canceled
+
+IMPORTANT: Configure this URL in your Stripe Dashboard:
+https://your-domain.com/webhooks/stripe
+"""
+from flask import request
+from app.services.stripe_service import stripe_service
+from app.models import User
+from hyperflask.factory import db
+from datetime import datetime, timedelta
+
+# Only accept POST requests
+if request.method != 'POST':
+    page.json_response = {'error': 'Method not allowed'}, 405
+    return
+
+# Check if Stripe is enabled
+if not stripe_service.is_enabled():
+    page.json_response = {'error': 'Stripe not enabled'}, 400
+    return
+
+# Get webhook payload and signature
+payload = request.data
+sig_header = request.headers.get('Stripe-Signature', '')
+
+try:
+    # Verify webhook signature and construct event
+    event = stripe_service.construct_webhook_event(payload, sig_header)
+except ValueError as e:
+    # Invalid payload
+    page.json_response = {'error': str(e)}, 400
+    return
+
+# Handle the event
+event_type = event['type']
+event_data = event['data']['object']
+
+if event_type == 'checkout.session.completed':
+    # Payment completed - activate subscription
+    session = event_data
+    customer_email = session.get('customer_email')
+    customer_id = session.get('customer')
+    subscription_id = session.get('subscription')
+
+    if customer_email and subscription_id:
+        with db:
+            user = User.query.filter_by(email=customer_email).first()
+            if user:
+                user.stripe_customer_id = customer_id
+                user.stripe_subscription_id = subscription_id
+                user.subscription_status = 'active'
+
+                # Extract plan name from price_id if available
+                # This is a simplified approach - you might want to fetch full subscription details
+                user.subscription_plan = 'basic'  # Default, update based on your logic
+
+                # Set subscription end date (30 days from now for monthly)
+                user.subscription_ends_at = datetime.utcnow() + timedelta(days=30)
+
+                user.save()
+
+                print(f"✅ Activated subscription for {customer_email}")
+
+elif event_type == 'customer.subscription.updated':
+    # Subscription updated (plan change, renewal, etc.)
+    subscription = event_data
+    subscription_id = subscription['id']
+    status = subscription['status']
+
+    with db:
+        user = User.query.filter_by(stripe_subscription_id=subscription_id).first()
+        if user:
+            user.subscription_status = status
+
+            # Update end date
+            if 'current_period_end' in subscription:
+                user.subscription_ends_at = datetime.fromtimestamp(
+                    subscription['current_period_end']
+                )
+
+            user.save()
+
+            print(f"✅ Updated subscription for {user.email}: {status}")
+
+elif event_type == 'customer.subscription.deleted':
+    # Subscription canceled
+    subscription = event_data
+    subscription_id = subscription['id']
+
+    with db:
+        user = User.query.filter_by(stripe_subscription_id=subscription_id).first()
+        if user:
+            user.subscription_status = 'canceled'
+
+            # Set end date if not already set
+            if 'canceled_at' in subscription and not user.subscription_ends_at:
+                user.subscription_ends_at = datetime.fromtimestamp(
+                    subscription['canceled_at']
+                )
+
+            user.save()
+
+            print(f"✅ Canceled subscription for {user.email}")
+
+else:
+    # Unhandled event type
+    print(f"ℹ️  Unhandled event type: {event_type}")
+
+# Return success response
+page.json_response = {'status': 'success'}
+---
