@@ -9,11 +9,11 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 def seed_database():
     from hyperflask.factory import create_app, db
-    from app.models import User, TimelineEntry
-    
+
     app = create_app()
-    
+
     with app.app_context():
+        from app.models import User, TimelineEntry
         with db:
             print("Creating test users...")
             user1 = User.create(email="user1@test.com")
