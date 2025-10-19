@@ -459,7 +459,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Hyperflask Documentation](https://docs.hyperflask.dev)
 - [CONTENT-COMMERCE-INTEGRATION.md](CONTENT-COMMERCE-INTEGRATION.md) - **How timeline + shop work together**
 - [STRIPE-SETUP.md](STRIPE-SETUP.md) - **Optional** Stripe subscriptions setup (mock/test/live modes)
-- [AUTOHYPERFLASK-ONE-CLICK-PLAN.md](AUTOHYPERFLASK-ONE-CLICK-PLAN.md) - Detailed analysis and roadmap
 - [scripts/README.md](scripts/README.md) - Database and utility scripts
 - [SECURITY.md](SECURITY.md) - Security policies and best practices
 

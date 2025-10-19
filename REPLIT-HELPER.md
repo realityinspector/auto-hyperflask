@@ -352,8 +352,9 @@ All test accounts use password: `password`
 - **Hyperflask Documentation**: https://docs.hyperflask.dev
 - **Replit Nix Documentation**: https://docs.replit.com/replit-workspace/nix
 - **AutoHyperFlask README**: [README.md](README.md)
-- **Deployment Improvements**: [DEPLOYMENT-IMPROVEMENTS.md](DEPLOYMENT-IMPROVEMENTS.md)
-- **One-Click Plan**: [AUTOHYPERFLASK-ONE-CLICK-PLAN.md](AUTOHYPERFLASK-ONE-CLICK-PLAN.md)
+- **Content + Commerce Integration**: [CONTENT-COMMERCE-INTEGRATION.md](CONTENT-COMMERCE-INTEGRATION.md)
+- **Stripe Setup Guide**: [STRIPE-SETUP.md](STRIPE-SETUP.md)
+- **Security Policies**: [SECURITY.md](SECURITY.md)
 
 ## 🤖 Agent-Specific Tips
 
@@ -404,4 +405,4 @@ nix-shell --run "bash scripts/replit-setup.sh"
 
 ---
 
-**Questions or issues?** Check [DEPLOYMENT-IMPROVEMENTS.md](DEPLOYMENT-IMPROVEMENTS.md) for comprehensive troubleshooting and optimization recommendations.
+**Questions or issues?** Check the [README.md](README.md) and [Troubleshooting section](#-troubleshooting) above for detailed guidance.
