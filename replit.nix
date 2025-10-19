@@ -6,5 +6,26 @@
     pkgs.nodePackages.npm
     pkgs.postgresql
     pkgs.chromium
+    pkgs.stdenv.cc.cc.lib
+    pkgs.glib
+    pkgs.nss
+    pkgs.nspr
+    pkgs.atk
+    pkgs.at-spi2-atk
+    pkgs.cups
+    pkgs.dbus
+    pkgs.libdrm
+    pkgs.xorg.libxcb
+    pkgs.xorg.libXcomposite
+    pkgs.xorg.libXdamage
+    pkgs.xorg.libXext
+    pkgs.xorg.libXfixes
+    pkgs.xorg.libXrandr
+    pkgs.libxkbcommon
+    pkgs.mesa
+    pkgs.expat
+    pkgs.alsa-lib
+    pkgs.pango
+    pkgs.cairo
   ];
 }
