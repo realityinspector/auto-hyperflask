@@ -16,6 +16,7 @@
     pkgs.dbus
     pkgs.libdrm
     pkgs.xorg.libxcb
+    pkgs.xorg.libX11
     pkgs.xorg.libXcomposite
     pkgs.xorg.libXdamage
     pkgs.xorg.libXext
@@ -27,5 +28,6 @@
     pkgs.alsa-lib
     pkgs.pango
     pkgs.cairo
+    pkgs.systemd  # provides libudev
   ];
 }
